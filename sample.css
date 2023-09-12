@@ -1,0 +1,11 @@
+body	{ background: white }
+			font-family: Arial, Helvetica, Sans-serif; }
+h1	{ font-size:18pt; color:red; font-weight:bold; }
+h2	{ font-size:12pt; color:black; font-weight:bold; }
+p	{ font-size:10pt; color:black; }
+p.alert { font-style: italic; color:red; }
+
+table, th, td { font-size:10pt; color:black; border:1px solid black;}
+
+td.center{ text-align:center;}
+			
