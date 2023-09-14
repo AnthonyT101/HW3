@@ -95,7 +95,7 @@ Purpose: Homework #3
 	
 	//Printing Array Variables
 	echo "<center><h1>Street Names</h1></center>";
-	print_r($streetNames);
+	print_r($streetNames); 
 	echo "<center><h1>Street Types</h1></center>";
 	print_r($streetTypes);
 	echo "<center><h1>First Names</h1></center>";
