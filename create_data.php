@@ -14,22 +14,22 @@ Purpose: Homework #3
 <body style="background-color: gray;">
 	<center><h1>Data processed.</h1></center>
 	<center><table>
-		<thead>
-			<tr>
-				<th>First Name</th>
-				<th>Last Name</th>
-				<th>Address</th>
-				<th>Email</th>
-			</tr>
-		</thead>
-		<tbody>
+	<thead>
+	<tr>
+	<th>First Name</th>
+	<th>Last Name</th>
+	<th>Address</th>
+	<th>Email</th>
+	</tr>
+	</thead>
+	<tbody>
 	
 	<pre>
 	<?php
 	//opens the first name csv file for reading only.
     	$csvFile = fopen("first_names.csv", "r");
 	//checks to see if csvFile doesn't returns false so it can do the while loop
-    	if ($csvFile !== false) {
+	if ($csvFile !== false) {
 	//While loop that reads the CSV file line by line using the fgetcsv function
 	//exists and does so until there are no longer anymore lines to read.
         while (($nameData = fgetcsv($csvFile)) !== false) {
@@ -38,41 +38,44 @@ Purpose: Homework #3
         }
 	//closes the csv file
         fclose($csvFile);
-   	}
+	}
 	
 	//creates street name array
 	$streetNames = array();
 	//opens the street name file
 	$streetNamesFile = fopen("street_names.txt", "r");
-   	if ($streetNamesFile !== false) {
+	if ($streetNamesFile !== false) {
 	//While loop that reads the file line by line using the fgets function
 	//and does so until there are no longer anymore lines to read.
         while (($line = fgets($streetNamesFile)) !== false) {
 	//explode function to find the : and splits it from the string
         $names = explode(":", $line);
+	$names = array_map('trim', $names);
 	//merges the elements of the array so that the values are appended to the end of the previous one. 
 	$streetNames = array_merge($streetNames, $names);
         }
 	//closes the file
-        fclose($streetNamesFile);
+	fclose($streetNamesFile);
     	}
 	
 	//creates street type array
 	$streetTypes = array();
 	//opens the street type file
 	$streetTypesFile = fopen("street_types.txt", "r");
-  	if ($streetTypesFile !== false) {
+	if ($streetTypesFile !== false) {
 	//While loop that reads the file line by line using the fgets function
 	//and does so until there are no longer anymore lines to read.
         while (($line = fgets($streetTypesFile)) !== false) {
 	//explode function to find the : and splits it from the string
         $types = explode("..;", $line);
+	//trim white space
+	$types = array_map('trim', $types);
 	//merges the elements of the array so that the values are appended to the end of the previous one. 
 	$streetTypes = array_merge($streetTypes, $types);
         }
 	//closes the file
         fclose($streetTypesFile);
-	}
+    	}
 	
 	//domain array
 	$domain = array();
@@ -82,11 +85,13 @@ Purpose: Homework #3
 	$domainType = explode(".", $domainFile);
 	//iterate through the array and group the adjacent elements
 	for ($i = 0; $i < count($domainType); $i += 2) {
-	$domain[] = $domainType[$i] . "." . $domainType[$i + 1];
+	$domain[] = trim($domainType[$i] . "." . $domainType[$i + 1]);
 	}
 	
 	//last name file
 	$lastNames = file("last_names.txt");
+	//trims whitespace out of lastNames
+	$lastNames = array_map('trim', $lastNames);
 	
 	//counter variable for street type variable
 	$counter = 0;
@@ -95,7 +100,7 @@ Purpose: Homework #3
 	
 	//Printing Array Variables
 	echo "<center><h1>Street Names</h1></center>";
-	print_r($streetNames); 
+	print_r($streetNames);
 	echo "<center><h1>Street Types</h1></center>";
 	print_r($streetTypes);
 	echo "<center><h1>First Names</h1></center>";
@@ -105,7 +110,10 @@ Purpose: Homework #3
 	echo "<center><h1>Domains</h1></center>";
 	print_r($domain);
 	
+	//opens a new file to write called customers.txt
+	$file = fopen("customers.txt", "w");
 
+	if($file) {
 	//for loop that makes the table for the first 25 customer values
 	for ($i = 0; $i < 25; $i++) {
 	//variable for the street type and domains array and counter
@@ -120,11 +128,14 @@ Purpose: Homework #3
 	}
 	//do while that generates a random number and stores it into an array for us to use for street address
 	do {
-        $randNum = rand(1000, 9999);
+	$randNum = rand(1000, 9999);
         } while (in_array($randNum, $randNumArr));
 
         //stores the generated random number in the array
         $randNumArr[] = $randNum;
+		
+	//format the customerData variable
+	$customerData = "{$firstNames[$i]}:{$lastNames[$i]}:{$randNum} {$streetNames[$i]} {$streetType}:{$firstNames[$i]}.{$lastNames[$i]}@$domains";
 		
 	//echos the table values
 	echo "<tr>";
@@ -133,11 +144,17 @@ Purpose: Homework #3
 	echo "<td>$randNum {$streetNames[$i]} $streetType</td>";
 	echo "<td>{$firstNames[$i]}.{$lastNames[$i]}@$domains</td>";
 	echo "</tr>";
+		
+	//write data with a newline character
+	fwrite($file, $customerData . PHP_EOL);
+	}
+	//close file
+	fclose($file);
 	}
 	?>
 	</pre>
-		</tbody>
-		</table></center>
+	</tbody>
+	</table></center>
 	<br>
 	<center><a href="html.html"> Return back to original page</a></center>
 </body>
